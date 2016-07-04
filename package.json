@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node ./src/index.js",
-    "example": "node ./src/index.js git@github.com:solomonhawk/gifs-to-gifs.git master",
+    "example": "node ./src/index.js git@github.com:solomonhawk/gifs-to-gifs.git",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Solomon Hawk <solomon.hawk@viget.com> (http://viget.com/)",
@@ -25,6 +25,7 @@
     "babel-register": "6.9.0",
     "minimist": "1.2.0",
     "recursive-readdir": "2.0.0",
-    "shelljs": "0.7.0"
+    "shelljs": "0.7.0",
+    "winston": "2.2.0"
   }
 }
