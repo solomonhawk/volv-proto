@@ -1,0 +1,25 @@
+{
+  "name": "volv-proto",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "go": "node ./src/index.js git@github.com:solomonhawk/gifs-to-gifs.git dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Solomon Hawk <solomon.hawk@viget.com> (http://viget.com/)",
+  "license": "MIT",
+  "dependencies": {
+    "babel": "6.5.2",
+    "babel-cli": "6.9.0",
+    "babel-core": "6.9.0",
+    "babel-plugin-transform-object-assign": "6.8.0",
+    "babel-polyfill": "6.9.1",
+    "babel-preset-es2015": "6.9.0",
+    "babel-preset-stage-1": "6.5.0",
+    "babel-register": "6.9.0",
+    "minimist": "1.2.0",
+    "recursive-readdir": "2.0.0",
+    "shelljs": "0.7.0"
+  }
+}
