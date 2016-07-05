@@ -33,6 +33,7 @@ function main() {
   createReportsDirectory()
   createRepoReportDirectory()
   createTempDirectory()
+  cleanUpTempDirectory()
   cloneGitRepository()
 
   if (cd(TMP_DIR).code !== 0) {
@@ -42,7 +43,16 @@ function main() {
 
   const hashes = collectCommitHashList()
 
-  writeReportsForHashes(hashes, cleanUpTempDirectory)
+  writeReportsForHashes(hashes, (err, results) => {
+    if (err) {
+      logger.error(err)
+    } else {
+      aggregateResults(results)
+    }
+
+    cleanUpTempDirectory()
+  })
+
 
   if (cd(cwd).code !== 0) {
     echo('Could not change directory back to: "' + cwd + '". Hmm... might be ok?')
@@ -157,7 +167,6 @@ function writeReportsForHashes(hashes, done) {
 }
 
 function reportHash(hash, reportCallback) {
-  const output = []
   const errors = []
 
   // checkout the .git commit by hash
@@ -179,7 +188,7 @@ function reportHash(hash, reportCallback) {
       wstream.write(JSON.stringify(results))
       wstream.end()
 
-      reportCallback(null, results)
+      reportCallback(null, { hash, files: results })
     })
 
     function eachResult(filePath, done) {
@@ -191,10 +200,24 @@ function reportHash(hash, reportCallback) {
   })
 }
 
+function aggregateResults(reports) {
+  const output = {}
+
+  reports.forEach(({ hash, files }) => {
+    files.forEach(({ size, relPath, fullPath }) => {
+      var out = (output[relPath] = output[relPath] || { relPath, fullPath })
+      out.sizes = out.sizes || {}
+      out.sizes[hash] = size
+    })
+  })
+
+  console.log(output)
+}
+
 function checkout(target) {
   logger.info('Checking out: "' + target + '".')
 
-  cdToTempDir()
+  cdIntoTempDir()
 
   let command = `git checkout ${target}`
   let result = exec(command, { silent: true })
@@ -219,7 +242,7 @@ function revListAllReverse() {
   return result
 }
 
-function cdToTempDir() {
+function cdIntoTempDir() {
   if (cd(TMP_DIR).code !== 0) {
     logger.error('Could not change directory to: "' + TMP_DIR + '".')
     exit(1)
